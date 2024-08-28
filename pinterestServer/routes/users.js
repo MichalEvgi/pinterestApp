@@ -1,9 +1,42 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+import * as dbFunctions from '../dbFunctions.js';
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+const router = express.Router();
+
+// GET user by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await dbFunctions.getUserById(req.params.id);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
-module.exports = router;
+// POST create new user
+router.post('/', async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+    const userId = await dbFunctions.createUser(username, email, password, role);
+    res.status(201).json({ userId });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create user', error: error.message });
+  }
+});
+
+// PUT update user role
+router.put('/:id/role', async (req, res) => {
+  try {
+    const { role } = req.body;
+    await dbFunctions.updateUserRole(req.params.id, role);
+    res.json({ message: 'User role updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update user role', error: error.message });
+  }
+});
+
+export default router;

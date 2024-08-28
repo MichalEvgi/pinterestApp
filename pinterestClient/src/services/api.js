@@ -18,12 +18,51 @@ export const fetchFeed = async () => {
   return response.data;
 };
 
-export const uploadMedia = async (mediaData) => {
-  const response = await axios.post(`${API_URL}/media`, mediaData);
-  return response.data;
+export const getBoards = async () => {
+  try {
+    const response = await axios.get('/api/boards');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const deleteMedia = async (mediaId) => {
-  const response = await axios.delete(`${API_URL}/media/${mediaId}`);
-  return response.data;
+export const addBoard = async (boardTitle) => {
+  try {
+    const response = await axios.post('/api/boards', {
+      title: boardTitle,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
+
+export const getBoardDetails = async (boardId) => {
+  try {
+    const response = await axios.get(`/api/boards/${boardId}`);
+    return response.data;
+  } catch (error) {
+    throw error; 
+  }
+};
+
+// Function to add a new picture to a board
+export const addPictureToBoard = async (boardId, pictureData) => {
+  try {
+    const response = await axios.post(`/api/boards/${boardId}/pictures`, pictureData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// export const uploadMedia = async (mediaData) => {
+//   const response = await axios.post(`${API_URL}/media`, mediaData);
+//   return response.data;
+// };
+
+// export const deleteMedia = async (mediaId) => {
+//   const response = await axios.delete(`${API_URL}/media/${mediaId}`);
+//   return response.data;
+// };

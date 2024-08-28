@@ -1,79 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getBoards, addBoard } from '../services/api'; 
 import '../css/PersonalArea.css'; 
+import BoardDetails from './BoardDetail';
 
 const PersonalArea = () => {
-  const [boards, setBoards] = useState([
-    {
-      id: 1,
-      title: 'רקעים',
-      media: [
-        { id: 1, url: 'media1.jpg' },
-        { id: 2, url: 'media2.jpg' },
-        { id: 3, url: 'media3.jpg' },
-      ],
-    },
-    {
-      id: 2,
-      title: 'makeup',
-      media: [
-        { id: 1, url: 'makeup1.jpg' },
-        { id: 2, url: 'makeup2.jpg' },
-        { id: 3, url: 'makeup3.jpg' },
-      ],
-    },
-    {
-      id: 3,
-      title: 'קשקושים',
-      media: [
-        { id: 1, url: 'doodles1.jpg' },
-        { id: 2, url: 'doodles2.jpg' },
-        { id: 3, url: 'doodles3.jpg' },
-      ],
-    },
-    {
-      id: 4,
-      title: 'nails',
-      media: [
-        { id: 1, url: 'nails1.jpg' },
-        { id: 2, url: 'nails2.jpg' },
-        { id: 3, url: 'nails3.jpg' },
-      ],
-    },
-  ]);
+  const [boards, setBoards] = useState([]); // State to store boards
+  const [newBoardTitle, setNewBoardTitle] = useState(''); // State for new board title
+  const [showAddBoard, setShowAddBoard] = useState(false); // State to show/hide add board form
+  const [loading, setLoading] = useState(true); // State to manage loading state
+  const [selectedBoardId, setSelectedBoardId] = useState(null); 
+  const [error, setError] = useState(null); // State to manage errors
 
-  const [newBoardTitle, setNewBoardTitle] = useState('');
-  const [showAddBoard, setShowAddBoard] = useState(false);
+  // Fetch boards from the server when the component mounts
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const data = await getBoards();
+        setBoards(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load boards. Please try again.');
+        setLoading(false);
+      }
+    };
 
+    fetchBoards();
+  }, []);
+
+  // Handle adding a new board
   const handleAddBoard = () => {
     setShowAddBoard(true);
   };
 
-  const handleSaveNewBoard = () => {
+  // Handle saving the new board
+  const handleSaveNewBoard = async () => {
     if (newBoardTitle.trim()) {
-      const newBoard = {
-        id: boards.length + 1,
-        title: newBoardTitle,
-        media: [],
-      };
-      setBoards([...boards, newBoard]);
-      setNewBoardTitle('');
-      setShowAddBoard(false);
+      try {
+        const newBoard = await addBoard(newBoardTitle); // Use addBoard from api.js
+        setBoards([...boards, newBoard]); // Append new board to the existing list
+        setNewBoardTitle('');
+        setShowAddBoard(false);
+      } catch (err) {
+        setError('Failed to add new board. Please try again.');
+      }
     }
   };
 
+  // Handle click on a board to view details
   const handleBoardClick = (boardId) => {
-    // Logic to navigate to the board detail page or open a modal with board's media
+    setSelectedBoardId(boardId);
     alert(`Open board with ID: ${boardId}`);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <div className="personal-area">
+      {selectedBoardId && <BoardDetails boardId={selectedBoardId} />}
+      <h1>My Boards</h1>
       <div className="boards-container">
-        {boards.map((board) => (
-          <div key={board.id} className="board-item" onClick={() => handleBoardClick(board.id)}>
+        {Array.isArray(boards) && boards.map((board) => (
+          <div
+            key={board.id}
+            className="board-item"
+            onClick={() => handleBoardClick(board.id)}
+          >
             <div className="board-thumbnail">
               {board.media.slice(0, 3).map((media, index) => (
-                <img key={index} src={media.url} alt={board.title} className="thumbnail-image" />
+                <img
+                  key={index}
+                  src={media.url}
+                  alt={board.title}
+                  className="thumbnail-image"
+                />
               ))}
             </div>
             <div className="board-title">{board.title}</div>
@@ -84,7 +89,7 @@ const PersonalArea = () => {
           <div className="add-board-text">Add New Board</div>
         </div>
       </div>
-
+    
       {showAddBoard && (
         <div className="add-board-modal">
           <input
@@ -94,9 +99,8 @@ const PersonalArea = () => {
             placeholder="Enter board title"
             className="add-board-input"
           />
-          <button onClick={handleSaveNewBoard} className="save-board-button">
-            Save Board
-          </button>
+          <button onClick={handleSaveNewBoard}>Save</button>
+          <button onClick={() => setShowAddBoard(false)}>Cancel</button>
         </div>
       )}
     </div>

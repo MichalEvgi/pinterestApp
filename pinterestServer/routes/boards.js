@@ -1,5 +1,5 @@
 import express from 'express';
-import * as dbFunctions from '../dbFunctions.js';
+import * as dbFunctions from '../../pinterestDatabase/database.js';
 
 const router = express.Router();
 

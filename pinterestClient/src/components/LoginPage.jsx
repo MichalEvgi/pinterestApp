@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { login, register } from '../services/api'; // Import the API functions
+import '../css/LoginPage.css';
 
 const LoginPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -40,11 +41,6 @@ const LoginPage = () => {
     } catch (err) {
       setError('Error registering. Please try again.');
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser');
-    window.location.href = '/';
   };
 
   return (
@@ -109,11 +105,6 @@ const LoginPage = () => {
           {isLoginMode ? 'Switch to Register' : 'Switch to Login'}
         </button>
       </div>
-      {localStorage.getItem('currentUser') && (
-        <div>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      )}
     </div>
   );
 };

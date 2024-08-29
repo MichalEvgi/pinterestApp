@@ -1,11 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/MediaDisplay.css'; 
+import { addPictureToBoard, getBoards } from '../services/api'; // Import necessary API functions
 
-const MediaDisplay = ({ media, onClose }) => {
+const MediaDisplay = ({ media, onClose, userId }) => { // Accept userId as a prop
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
-  
+  const [error, setError] = useState('');
+  const [boards, setBoards] = useState([]); // State to store user's boards
+  const [selectedBoardId, setSelectedBoardId] = useState(''); // State to store selected board ID
+
+  useEffect(() => {
+    // Fetch user's boards when the component mounts
+    const fetchBoards = async () => {
+      try {
+        const fetchedBoards = await getBoards(userId); // Pass userId to fetch boards
+        setBoards(fetchedBoards);
+        if (fetchedBoards.length > 0) {
+          setSelectedBoardId(fetchedBoards[0].id); // Set default selected board to the first one
+        }
+      } catch (error) {
+        console.error('Failed to fetch boards', error);
+        setError('Failed to load boards. Please try again later.');
+      }
+    };
+
+    if (userId) {
+      fetchBoards();
+    }
+  }, [userId]); // Re-run the effect when userId changes
+
   const handleLike = () => {
     setLiked(!liked);
   };
@@ -21,9 +45,20 @@ const MediaDisplay = ({ media, onClose }) => {
     }
   };
 
-  const handleSaveMedia = () => {
-    // Logic to save media to a board in the personal area
-    alert('Media saved to your board!');
+  const handleSaveMedia = async () => {
+    if (!selectedBoardId) {
+      alert('Please select a board to save the media.');
+      return;
+    }
+
+    try {
+      // Make the API call to save the media to the selected board
+      await addPictureToBoard(selectedBoardId, media.id);
+      alert('Media saved to your board!');
+    } catch (err) {
+      console.error('Failed to save media to the board', err);
+      setError('Failed to save media to the board. Please try again.');
+    }
   };
 
   return (
@@ -44,6 +79,25 @@ const MediaDisplay = ({ media, onClose }) => {
         <div className="media-description">
           <h2>{media.title}</h2>
           <p>{media.description}</p>
+        </div>
+
+        {/* Display error if there is one */}
+        {error && <div className="error-message">{error}</div>}
+
+        {/* Dropdown to select board */}
+        <div className="select-board">
+          <label htmlFor="board-select">Select Board:</label>
+          <select 
+            id="board-select" 
+            value={selectedBoardId} 
+            onChange={(e) => setSelectedBoardId(e.target.value)}
+          >
+            {boards.map((board) => (
+              <option key={board.id} value={board.id}>
+                {board.title}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Like, Save and Comment functionality */}

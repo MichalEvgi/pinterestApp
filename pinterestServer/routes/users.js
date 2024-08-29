@@ -23,7 +23,8 @@ router.post('/', async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
     const userId = await dbFunctions.createUser(username, email, password, role);
-    res.status(201).json({ userId });
+    const user = await dbFunctions.getUserById(userId);
+    res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create user', error: error.message });
   }

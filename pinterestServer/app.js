@@ -9,10 +9,16 @@ import usersRouter from './routes/users.js';
 import pinsRouter from './routes/pins.js';
 import boardsRouter from './routes/boards.js';
 
+import cors from 'cors'; // Add this line to enable CORS
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5177' // Replace with your client-side URL
+}));
 
 app.use(logger('dev'));
 app.use(express.json());

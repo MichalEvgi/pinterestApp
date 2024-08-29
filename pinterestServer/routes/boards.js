@@ -14,10 +14,10 @@ router.get('/user/:userId', async (req, res) => {
 });
 
 // POST create new board
-router.post('/', async (req, res) => {
+router.post('/user/:userId', async (req, res) => {
   try {
-    const { userId, title } = req.body;
-    const boardId = await dbFunctions.createBoard(userId, title);
+    const { title } = req.body;
+    const boardId = await dbFunctions.createBoard(req.params.userId, title);
     res.status(201).json({ boardId });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create board', error: error.message });
@@ -25,9 +25,9 @@ router.post('/', async (req, res) => {
 });
 
 // POST add pin to board
-router.post('/:boardId/pins', async (req, res) => {
+router.post('/:boardId', async (req, res) => {
   try {
-    const { pinId } = req.body;
+    const  pinId = req.body;
     await dbFunctions.addPinToBoard(req.params.boardId, pinId);
     res.json({ message: 'Pin added to board successfully' });
   } catch (error) {

@@ -3,6 +3,17 @@ import * as dbFunctions from '../../pinterestDatabase/database.js';
 
 const router = express.Router();
 
+// GET pins
+router.get('/', async (req, res) => {
+    try {
+      const pins = await dbFunctions.getPins();
+        res.json(pins);
+      }
+     catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  });
+
 // GET pin by ID
 router.get('/:id', async (req, res) => {
   try {

@@ -4,7 +4,7 @@ import * as dbFunctions from '../../pinterestDatabase/database.js';
 const router = express.Router();
 
 // GET user by ID
-router.get('/:id', async (req, res) => {
+router.get('/byId/:id', async (req, res) => {
   try {
     const user = await dbFunctions.getUserById(req.params.id);
     if (user) {
@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
 // GET user by name and password
 router.get('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.query;
     const user = await dbFunctions.getUserByNameAndPassword(username, password);
     if (user) {
       user.role = roleConverter(user.role);
@@ -31,6 +31,7 @@ router.get('/login', async (req, res) => {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
+
     console.error(error.stack);  
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -40,14 +41,8 @@ router.get('/login', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-    switch (role) {
-      case 'whatcher': role = 1; break;
-      case 'creator': role = 2; break;
-      case 'manager': role = 3; break;
-      default:
-        return res.status(400).json({ message: 'Invalid role' });
-    }
-    const userId = await dbFunctions.createUser(username, email, password, role);
+    let convertedrole = converFromRole(role);
+    const userId = await dbFunctions.createUser(username, email, password, convertedrole);
     const user = await dbFunctions.getUserById(userId);
     res.status(201).json(user);
   } catch (error) {
@@ -58,14 +53,8 @@ router.post('/', async (req, res) => {
 // PUT update user role
 router.put('/:id/role', async (req, res) => {
   try {
-    const { role } = req.body;
-    switch (role) {
-      case 'whatcher': role = 1; break;
-      case 'creator': role = 2; break;
-      case 'manager': role = 3; break;
-      default:
-        return res.status(400).json({ message: 'Invalid role' });
-    }
+    let { role } = req.body;
+    role = converFromRole(role);
     await dbFunctions.updateUserRole(req.params.id, role);
     res.json({ message: 'User role updated successfully' });
   } catch (error) {
@@ -75,11 +64,21 @@ router.put('/:id/role', async (req, res) => {
 
 const roleConverter= (role)=>{
   switch (role) {
-    case 1: return 'whatcher'; break;
-    case 2: return 'creator'; break;
-    case 3: return'manager'; break;
+    case 'viewer': return 'whatcher'; break;
+    case 'creator': return 'creator'; break;
+    case 'admin': return'manager'; break;
     default:
       return 'Unknown';
+  }
+}
+
+const converFromRole = (role)=>{
+  switch (role) {
+    case 'whatcher': return 1; break;
+    case 'creator': return 2; break;
+    case'manager': return 3; break;
+    default:
+      return 0;
   }
 }
 

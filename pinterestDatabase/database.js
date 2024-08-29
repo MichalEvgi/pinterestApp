@@ -15,7 +15,7 @@ export async function getUserById(userId) {
 }
 
 export async function getUserByNameAndPassword(username, password) {
-  const [rows] = await pool.execute('SELECT * FROM users WHERE username = ? and password= ?', [username, password]);
+  const [rows] = await pool.execute('SELECT * FROM users WHERE username = ? AND password = ?', [username, password]);
   return rows[0];
 }
 

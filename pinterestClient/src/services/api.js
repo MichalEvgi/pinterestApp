@@ -4,32 +4,32 @@ import axios from 'axios';
 const API_URL = 'http://localhost:3000/api'; 
 
 export const login = async (credentials) => {
-  const response = await axios.post(`${API_URL}/auth/login`, credentials);
+  const response = await axios.get(`${API_URL}/users`, credentials);
   return response.data;
 };
 
 export const register = async (userData) => {
-  const response = await axios.post(`${API_URL}/auth/register`, userData);
+  const response = await axios.post(`${API_URL}/users`, userData);
   return response.data;
 };
 
 export const fetchFeed = async () => {
-  const response = await axios.get(`${API_URL}/media`);
+  const response = await axios.get(`${API_URL}/pins`);
   return response.data;
 };
 
-export const getBoards = async () => {
+export const getBoards = async (id) => {
   try {
-    const response = await axios.get('/api/boards');
+    const response = await axios.get(`${API_URL}/boards/user/${id}`);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const addBoard = async (boardTitle) => {
+export const addBoard = async (boardTitle ,id) => {
   try {
-    const response = await axios.post('/api/boards', {
+    const response = await axios.post(`${API_URL}/boards/user/${id}`, {
       title: boardTitle,
     });
     return response.data;
@@ -40,7 +40,7 @@ export const addBoard = async (boardTitle) => {
 
 export const getBoardDetails = async (boardId) => {
   try {
-    const response = await axios.get(`/api/boards/${boardId}`);
+    const response = await axios.get(`${API_URL}/pins/board/${boardId}`);
     return response.data;
   } catch (error) {
     throw error; 
@@ -48,9 +48,9 @@ export const getBoardDetails = async (boardId) => {
 };
 
 // Function to add a new picture to a board
-export const addPictureToBoard = async (boardId, pictureData) => {
+export const addPictureToBoard = async (boardId, pinId) => {
   try {
-    const response = await axios.post(`/api/boards/${boardId}/pictures`, pictureData);
+    const response = await axios.post(`${API_URL}/boards/${boardId}`, pinId);
     return response.data;
   } catch (error) {
     throw error;

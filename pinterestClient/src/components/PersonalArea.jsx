@@ -10,12 +10,13 @@ const PersonalArea = () => {
   const [loading, setLoading] = useState(true); // State to manage loading state
   const [selectedBoardId, setSelectedBoardId] = useState(null); 
   const [error, setError] = useState(null); // State to manage errors
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
   // Fetch boards from the server when the component mounts
   useEffect(() => {
     const fetchBoards = async () => {
       try {
-        const data = await getBoards();
+        const data = await getBoards(currentUser.id);
         setBoards(data);
         setLoading(false);
       } catch (err) {
@@ -36,7 +37,7 @@ const PersonalArea = () => {
   const handleSaveNewBoard = async () => {
     if (newBoardTitle.trim()) {
       try {
-        const newBoard = await addBoard(newBoardTitle); // Use addBoard from api.js
+        const newBoard = await addBoard(newBoardTitle , currentUser.id); // Use addBoard from api.js
         setBoards([...boards, newBoard]); // Append new board to the existing list
         setNewBoardTitle('');
         setShowAddBoard(false);

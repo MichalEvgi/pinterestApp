@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-    const userId = await dbFunctions.createUser(username, email, password, role);
+    const userId = await dbFunctions.createUser(username, email, password, 2);
     const user = await dbFunctions.getUserById(userId);
     res.status(201).json(user);
   } catch (error) {

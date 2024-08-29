@@ -12,6 +12,7 @@ const CreateMedia = ({ onSaveMedia }) => {
   };
 
   const handleSave = () => {
+    console.log(mediaFile);
     if (mediaFile && title) {
       const newMedia = {
         id: Date.now(), // generate a unique ID for the new media

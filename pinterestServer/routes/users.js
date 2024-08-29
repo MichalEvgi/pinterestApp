@@ -6,6 +6,7 @@ const router = express.Router();
 // GET user by ID
 router.get('/:id', async (req, res) => {
   try {
+    //todo by name and password
     const user = await dbFunctions.getUserById(req.params.id);
     if (user) {
       res.json(user);

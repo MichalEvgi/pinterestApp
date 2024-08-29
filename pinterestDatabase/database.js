@@ -26,7 +26,10 @@ export async function createPin(userId, title, description, mediaUrl, mediaType)
   );
   return result.insertId;
 }
-
+export async function getPins() {
+    const [rows] = await pool.execute('SELECT * FROM pins');
+    return rows;
+  }
 export async function getPinById(pinId) {
   const [rows] = await pool.execute('SELECT * FROM pins WHERE id = ?', [pinId]);
   return rows[0];

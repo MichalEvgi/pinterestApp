@@ -39,6 +39,16 @@ router.post('/', async (req, res) => {
   }
 });
 
+// GET pins by board id
+router.get('/board/:boardId', async (req, res) => {
+  try {
+    const pins = await dbFunctions.getPinsByBoardId(req.params.boardId);
+      res.json(pins);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // PUT update pin
 router.put('/:id', async (req, res) => {
   try {

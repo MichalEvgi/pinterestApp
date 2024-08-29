@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_URL = 'http://localhost:3000/api'; 
 
 export const login = async (credentials) => {
-  const response = await axios.get(`${API_URL}/users`, credentials);
+  const response = await axios.get(`${API_URL}/users/login`, credentials);
   return response.data;
 };
 

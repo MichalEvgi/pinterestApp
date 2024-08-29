@@ -14,6 +14,11 @@ export async function getUserById(userId) {
   return rows[0];
 }
 
+export async function getUserByNameAndPassword(username, password) {
+  const [rows] = await pool.execute('SELECT * FROM users WHERE username = ? and password= ?', [username, password]);
+  return rows[0];
+}
+
 export async function updateUserRole(userId, newRole) {
   await pool.execute('UPDATE users SET role = ? WHERE id = ?', [newRole, userId]);
 }
@@ -33,8 +38,13 @@ export async function getPins() {
 export async function getPinById(pinId) {
   const [rows] = await pool.execute('SELECT * FROM pins WHERE id = ?', [pinId]);
   return rows[0];
-}
-
+} 
+export async function getPinsByBoardId(boardId) {
+  const [rows] = await pool.execute(`SELECT p.id as id, user_id, title, description, media_url, media_type, created_at 
+    FROM pins p JOIN boards_pins b ON b.pin_id = p.id 
+    WHERE board_id = ?`, [boardId]);
+  return rows;
+} 
 export async function updatePin(pinId, title, description) {
   await pool.execute('UPDATE pins SET title = ?, description = ? WHERE id = ?', [title, description, pinId]);
 }

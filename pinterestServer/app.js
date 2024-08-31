@@ -30,6 +30,7 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/pins', pinsRouter);
 app.use('/api/boards', boardsRouter);
+app.use('/uploads', express.static('uploads'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

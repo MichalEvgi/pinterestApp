@@ -57,10 +57,12 @@ export const addPictureToBoard = async (boardId, pinId) => {
   }
 };
 
-// export const uploadMedia = async (mediaData) => {
-//   const response = await axios.post(`${API_URL}/media`, mediaData);
-//   return response.data;
-// };
+ export const uploadMedia = async (mediaData) => {
+   const response = await axios.post(`${API_URL}/pins`, mediaData,{ headers: {
+    'Content-Type': 'multipart/form-data'
+  }});
+   return response.data;
+ };
 
 // export const deleteMedia = async (mediaId) => {
 //   const response = await axios.delete(`${API_URL}/media/${mediaId}`);

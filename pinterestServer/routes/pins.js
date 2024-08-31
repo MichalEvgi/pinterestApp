@@ -1,7 +1,22 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'node:path';
 import * as dbFunctions from '../../pinterestDatabase/database.js';
 
+
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
 
 // GET pins
 router.get('/', async (req, res) => {
@@ -29,10 +44,17 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST create new pin
-router.post('/', async (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('file not found');
+  }
+  console.log(req.file);
+  const filePath = req.file.path;
+  const fileType = req.file.mimetype.startsWith('image') ? 'image' : 'video';
+
   try {
-    const { userId, title, description, mediaUrl, mediaType } = req.body;
-    const pinId = await dbFunctions.createPin(userId, title, description, mediaUrl, mediaType);
+    const {  title, description} = req.body;
+    const pinId = await dbFunctions.createPin(2, title, description, filePath, fileType);
     res.status(201).json({ pinId });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create pin', error: error.message });

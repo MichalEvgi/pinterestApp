@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { uploadMedia } from '../services/api';
 import '../css/CreateMedia.css';
 
 const CreateMedia = ({ onSaveMedia }) => {
@@ -10,18 +11,15 @@ const CreateMedia = ({ onSaveMedia }) => {
   const handleMediaUpload = (event) => {
     setMediaFile(event.target.files[0]);
   };
-
   const handleSave = () => {
     console.log(mediaFile);
     if (mediaFile && title) {
-      const newMedia = {
-        id: Date.now(), // generate a unique ID for the new media
-        mediaFile,
-        title,
-        description,
-        tags: tags.split(',').map(tag => tag.trim()), // convert comma-separated string to array
-      };
-      onSaveMedia(newMedia);
+      const formData = new FormData();
+      formData.append('file', mediaFile);
+      formData.append('title', title);
+      formData.append('description', description);
+      //onSaveMedia(formData);
+      uploadMedia(formData);
     } else {
       alert('Please provide a title and select a media file.');
     }

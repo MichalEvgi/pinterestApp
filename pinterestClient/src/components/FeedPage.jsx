@@ -80,7 +80,7 @@ const FeedPage = () => {
       <div className="media-grid">
         {filteredItems.map((item) => (
           <div key={item.id} className="media-item" onClick={() => handleMediaClick(item)}>
-            <img src={item.imageUrl} alt={item.description} className="media-img" />
+            <img src={"http://localhost:3000/"+item.media_url} alt={item.description} className="media-img" />
           </div>
         ))}
       </div>

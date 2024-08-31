@@ -64,6 +64,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 // GET pins by board id
 router.get('/board/:boardId', async (req, res) => {
   try {
+    //to do find error
     const pins = await dbFunctions.getPinsByBoardId(req.params.boardId);
       res.json(pins);
   } catch (error) {

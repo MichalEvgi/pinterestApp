@@ -73,7 +73,7 @@ const PersonalArea = () => {
             onClick={() => handleBoardClick(board.id)}
           >
             <div className="board-thumbnail">
-              {board.media.slice(0, 3).map((media, index) => (
+              {false && board.media.slice(0, 3).map((media, index) => (
                 <img
                   key={index}
                   src={media.url}

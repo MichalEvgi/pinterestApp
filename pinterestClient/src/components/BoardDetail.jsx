@@ -10,7 +10,7 @@ const BoardDetails = ({ boardId }) => {
     const fetchBoardDetails = async () => {
       try {
         const data = await getBoardDetails(boardId); // Use the imported API function
-        setBoard(data.board);
+        //setBoard(data.board);
         setImages(data.images); // Assume the API returns board details with associated images
       } catch (error) {
         console.error('Failed to fetch board details', error);
@@ -31,7 +31,7 @@ const BoardDetails = ({ boardId }) => {
           <div className="image-grid">
             {images.map((image) => (
               <div key={image.id} className="image-card">
-                <img src={image.url} alt={image.description} />
+                <img src={image.media_url} alt={image.description} />
               </div>
             ))}
           </div>

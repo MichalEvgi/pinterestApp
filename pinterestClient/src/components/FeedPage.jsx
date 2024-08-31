@@ -86,7 +86,7 @@ const FeedPage = () => {
       </div>
 
       {selectedMedia && (
-        <MediaModal media={selectedMedia} onClose={handleCloseModal} userId={currentUser.id}/>
+        <MediaModal media={selectedMedia} onClose={handleCloseModal} userId={currentUser.id} mediaUrl={"http://localhost:3000/"}/>
       )}
     </div>
   );

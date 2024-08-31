@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/MediaDisplay.css'; 
 import { addPictureToBoard, getBoards } from '../services/api'; // Import necessary API functions
 
-const MediaDisplay = ({ media, onClose, userId }) => { // Accept userId as a prop
+const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userId as a prop
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
@@ -68,10 +68,10 @@ const MediaDisplay = ({ media, onClose, userId }) => { // Accept userId as a pro
         
         {/* Display media */}
         <div className="media-container">
-          {media.type === 'video' ? (
-            <video src={media.url} controls className="media-element" />
+          {media.media_type === 'video' ? (
+            <video src={mediaUrl+media.media_url} controls className="media-element" />
           ) : (
-            <img src={media.url} alt={media.description} className="media-element" />
+            <img src={mediaUrl+media.media_url} alt={media.description} className="media-element" />
           )}
         </div>
 

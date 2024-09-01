@@ -22,7 +22,8 @@ router.post('/user/:userId', async (req, res) => {
   try {
     const { title } = req.body;
     const boardId = await dbFunctions.createBoard(req.params.userId, title);
-    res.status(201).json({ boardId });
+    const board = await dbFunctions.getBoardById(boardId);
+    res.status(201).json(board);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create board', error: error.message });
   }

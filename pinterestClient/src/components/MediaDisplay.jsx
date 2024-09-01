@@ -84,9 +84,7 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
       };
       try{
         const data = await addCommentToPin(media.id, newComment);
-        newComment.id= data.commentId;
-        newComment.username= data.username;
-        setComments([...comments, newComment]);
+        setComments([...comments, data]);
         setComment('');
       }
       catch(error){
@@ -165,7 +163,16 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
           <h3>Comments</h3>
           <div className="comment-list">
             {comments.map((comment, index) => (
-              <div key={index} className="comment-item">{comment.username}: {comment.content}</div>
+              <div key={index} className="comment-item"><div>{comment.username}: {comment.content}</div>
+              <p>{new Date(comment.created_at).toLocaleString('en-US', {
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: 'numeric', 
+                minute: 'numeric'
+              })}</p>
+              </div>
+              
             ))}
           </div>
           <input 

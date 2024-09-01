@@ -35,6 +35,11 @@ export async function getPins() {
     const [rows] = await pool.execute('SELECT * FROM pins');
     return rows;
   }
+
+export async function getPinsWithOffset(start, offset){
+  const [rows] = await pool.execute('SELECT * FROM pins LIMIT ?,?', [start, offset]);
+  return rows;
+}
 export async function getPinById(pinId) {
   const [rows] = await pool.execute('SELECT * FROM pins WHERE id = ?', [pinId]);
   return rows[0];
@@ -45,6 +50,10 @@ export async function getPinsByBoardId(boardId) {
     WHERE board_id = ?`, [boardId]);
   return rows;
 } 
+export async function getPinsByUserId(userId) {
+  const [rows] = await pool.execute('SELECT * FROM pins WHERE user_id =?', [userId]);
+  return rows;
+}
 export async function getPinsByBoardIdWithLimit(boardId, limit) {
   const [rows] = await pool.execute(`SELECT p.id as id, user_id, title, description, media_url, media_type, created_at 
     FROM pins p JOIN board_pins b ON b.pin_id = p.id 
@@ -63,6 +72,11 @@ export async function deletePin(pinId) {
 export async function createBoard(userId, title) {
   const [result] = await pool.execute('INSERT INTO boards (user_id, title) VALUES (?, ?)', [userId, title]);
   return result.insertId;
+}
+
+export async function getBoardById(boardId) {
+  const [rows] = await pool.execute('SELECT * FROM boards WHERE id =?', [boardId]);
+  return rows[0];
 }
 
 export async function getBoardsByUserId(userId) {
@@ -105,6 +119,11 @@ export async function addComment(pinId, userId, content) {
     [userId, pinId, content]
   );
   return result.insertId;
+}
+
+export async function getCommentById(commentId) {
+  const [rows] = await pool.execute('SELECT * FROM comments WHERE id =?', [commentId]);
+  return rows[0];
 }
 
 export async function getCommentsForPin(pinId) {

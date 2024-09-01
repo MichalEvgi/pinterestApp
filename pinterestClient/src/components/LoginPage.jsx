@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { login, register } from '../services/api'; // Import the API functions
+import { login, register } from '../services/api'; 
 import '../css/LoginPage.css';
 
 const LoginPage = () => {
@@ -11,7 +11,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
-    setError(''); // Clear previous errors
+    setError(''); 
     try {
       const user = await login({ username, password });
       if (user && user.id) {
@@ -27,7 +27,7 @@ const LoginPage = () => {
   };
 
   const handleRegister = async () => {
-    setError(''); // Clear previous errors
+    setError(''); 
     try {
       const user = await register({ username, email, password, role });
       if (user && user.id) {

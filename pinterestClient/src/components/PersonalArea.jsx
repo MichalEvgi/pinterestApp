@@ -4,15 +4,15 @@ import '../css/PersonalArea.css';
 import BoardDetails from './BoardDetail';
 
 const PersonalArea = () => {
-  const [boards, setBoards] = useState([]); // State to store boards
-  const [newBoardTitle, setNewBoardTitle] = useState(''); // State for new board title
-  const [showAddBoard, setShowAddBoard] = useState(false); // State to show/hide add board form
-  const [loading, setLoading] = useState(true); // State to manage loading state
-  const [selectedBoard, setSelectedBoard] = useState(null); //  
-  const [error, setError] = useState(null); // State to manage errors
+  const [boards, setBoards] = useState([]); 
+  const [newBoardTitle, setNewBoardTitle] = useState(''); 
+  const [showAddBoard, setShowAddBoard] = useState(false); 
+  const [loading, setLoading] = useState(true); 
+  const [selectedBoard, setSelectedBoard] = useState(null); 
+  const [error, setError] = useState(null); 
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-  // Fetch boards from the server when the component mounts
+  
   useEffect(() => {
     const fetchBoards = async () => {
       try {
@@ -37,7 +37,7 @@ const PersonalArea = () => {
   const handleSaveNewBoard = async () => {
     if (newBoardTitle.trim()) {
       try {
-        const newBoard = await addBoard(newBoardTitle , currentUser.id); // Use addBoard from api.js
+        const newBoard = await addBoard(newBoardTitle , currentUser.id); 
         newBoard.media  = [];
         setBoards([...boards, newBoard]); // Append new board to the existing list
         setNewBoardTitle('');

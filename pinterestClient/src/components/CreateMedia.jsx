@@ -18,12 +18,11 @@ const CreateMedia = ({ onSaveMedia }) => {
       formData.append('file', mediaFile);
       formData.append('title', title);
       formData.append('description', description);
-      // onSaveMedia(formData); // If this is necessary for updating the state in a parent component
+      
   
       try {
         await uploadMedia(formData);
-        // Redirect after successful upload
-        window.location.href = '/feed'; // Adjust this to the correct path
+        window.location.href = '/feed';
       } catch (error) {
         console.error('Upload failed:', error);
         alert('Upload failed, please try again.');

@@ -81,7 +81,6 @@ const LoginPage = () => {
               >
                 <option value="watcher">Watcher</option>
                 <option value="creator">Creator</option>
-                <option value="manager">Manager</option>
               </select>
             </div>
           </>

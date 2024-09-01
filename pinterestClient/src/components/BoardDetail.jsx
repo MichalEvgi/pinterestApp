@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getBoardDetails } from '../services/api';
-import '../css/BoardDetail.css'; 
+import '../css/BoardDetail.css';
 
 const BoardDetails = ({ board, onClose, mediaUrl }) => {
   const [images, setImages] = useState([]);
@@ -20,6 +20,11 @@ const BoardDetails = ({ board, onClose, mediaUrl }) => {
     fetchBoardDetails();
   }, [board.id]);
 
+  const handleRemoveFromBoard = (imageId) => {
+    // Placeholder for remove logic
+    console.log('Remove image with ID:', imageId);
+  };
+
   return (
     <div className="board-details-modal">
       <div className="modal-details-content">
@@ -32,18 +37,25 @@ const BoardDetails = ({ board, onClose, mediaUrl }) => {
             <div className="image-grid">
               {images.map((image) => (
                 <div key={image.id} className="image-card">
-                   {image.media_type === 'video' ? (
-                      <video
-                        src={mediaUrl + image.media_url}
-                        className="media-img"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                      />
-                    ) : (
-                      <img src={mediaUrl + image.media_url} alt={image.description} className="media-img" />
-                    )}
+                  {image.media_type === 'video' ? (
+                    <video
+                      src={mediaUrl + image.media_url}
+                      className="media-img"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    />
+                  ) : (
+                    <img src={mediaUrl + image.media_url} alt={image.description} className="media-img" />
+                  )}
+                  <div className="overlay">
+                    <h3>{image.title}</h3>
+                    <p>{image.description}</p>
+                    <button onClick={() => handleRemoveFromBoard(image.id)} className="remove-button">
+                      Remove from Board
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

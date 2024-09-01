@@ -92,6 +92,10 @@ export async function removePinFromBoard(boardId, pinId) {
   await pool.execute('DELETE FROM board_pins WHERE board_id = ? AND pin_id = ?', [boardId, pinId]);
 }
 
+export async function deleteBoard(boardId) {
+  await pool.execute('DELETE FROM boards WHERE id =?', [boardId]);
+}
+
 // likes functions
 export async function addLike(userId, pinId) {
   await pool.execute('INSERT INTO likes (user_id, pin_id) VALUES (?, ?)', [userId, pinId]);

@@ -50,4 +50,15 @@ router.delete('/:boardId/pins/:pinId', async (req, res) => {
   }
 });
 
+//DELETE board
+router.delete('/:boardId', async (req, res) => {
+  try{
+    await dbFunctions.deleteBoard(req.params.boardId);
+    res.json({ message: 'Board deleted successfully' });
+  }
+  catch(error){
+    res.status(500).json({ message: 'Failed to delete board', error: error.message });
+  }
+});
+
 export default router;

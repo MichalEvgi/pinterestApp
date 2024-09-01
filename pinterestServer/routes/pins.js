@@ -21,6 +21,11 @@ const upload = multer({ storage: storage });
 // GET pins
 router.get('/', async (req, res) => {
     try {
+      if(req.query){
+        const {start, offset}= req.query;
+        const pins = await dbFunctions.getPinsWithOffset(start, offset);
+        res.json(pins);
+      }
       const pins = await dbFunctions.getPins();
         res.json(pins);
       }

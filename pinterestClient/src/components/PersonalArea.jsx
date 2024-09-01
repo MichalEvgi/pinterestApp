@@ -8,7 +8,7 @@ const PersonalArea = () => {
   const [newBoardTitle, setNewBoardTitle] = useState(''); // State for new board title
   const [showAddBoard, setShowAddBoard] = useState(false); // State to show/hide add board form
   const [loading, setLoading] = useState(true); // State to manage loading state
-  const [selectedBoardId, setSelectedBoardId] = useState(null); 
+  const [selectedBoard, setSelectedBoard] = useState(null); //  
   const [error, setError] = useState(null); // State to manage errors
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -48,9 +48,12 @@ const PersonalArea = () => {
   };
 
   // Handle click on a board to view details
-  const handleBoardClick = (boardId) => {
-    setSelectedBoardId(boardId);
-    alert(`Open board with ID: ${boardId}`);
+  const handleBoardClick = (board) => {
+    setSelectedBoard(board);
+  };
+
+  const handleCloseBoard = () => {
+    setSelectedBoard(null); // Close the board
   };
 
   if (loading) {
@@ -63,14 +66,13 @@ const PersonalArea = () => {
 
   return (
     <div className="personal-area">
-      {selectedBoardId && <BoardDetails boardId={selectedBoardId} mediaUrl="http://localhost:3000/" />}
       <h1>My Boards</h1>
       <div className="boards-container">
         {Array.isArray(boards) && boards.map((board) => (
           <div
             key={board.id}
             className="board-item"
-            onClick={() => handleBoardClick(board.id)}
+            onClick={() => handleBoardClick(board)}
           >
             <div className="board-thumbnail">
               { board.media.slice(0, 3).map((media, index) => (
@@ -104,6 +106,7 @@ const PersonalArea = () => {
           <button onClick={() => setShowAddBoard(false)}>Cancel</button>
         </div>
       )}
+      {selectedBoard && (<BoardDetails board={selectedBoard} onClose={handleCloseBoard} mediaUrl={"http://localhost:3000/"} />)}
     </div>
   );
 };

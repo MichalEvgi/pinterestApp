@@ -11,23 +11,32 @@ const CreateMedia = ({ onSaveMedia }) => {
   const handleMediaUpload = (event) => {
     setMediaFile(event.target.files[0]);
   };
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log(mediaFile);
     if (mediaFile && title) {
       const formData = new FormData();
       formData.append('file', mediaFile);
       formData.append('title', title);
       formData.append('description', description);
-      //onSaveMedia(formData);
-      uploadMedia(formData);
+      // onSaveMedia(formData); // If this is necessary for updating the state in a parent component
+  
+      try {
+        await uploadMedia(formData);
+        // Redirect after successful upload
+        window.location.href = '/feed'; // Adjust this to the correct path
+      } catch (error) {
+        console.error('Upload failed:', error);
+        alert('Upload failed, please try again.');
+      }
     } else {
       alert('Please provide a title and select a media file.');
     }
   };
+  
 
   return (
     <div className="create-media-container">
-      <h2>יצירת Pin</h2>
+      <h2>Create Pin</h2>
       <div className="create-media-form">
         <div className="media-upload">
           <input 
@@ -39,37 +48,28 @@ const CreateMedia = ({ onSaveMedia }) => {
             <p>{mediaFile.name}</p>
           ) : (
             <div className="upload-placeholder">
-              <span>בחרו קובץ או גררו ושחררו אותו כאן</span>
+              <span>Select or drag a file and drop it here</span>
             </div>
           )}
         </div>
         <div className="input-group">
-          <label>כותרת</label>
+          <label>Title</label>
           <input 
             type="text" 
             value={title} 
             onChange={(e) => setTitle(e.target.value)} 
-            placeholder="הוספת כותרת" 
+            placeholder="Add a title" 
           />
         </div>
         <div className="input-group">
-          <label>תיאור</label>
+          <label>Description</label>
           <textarea 
             value={description} 
             onChange={(e) => setDescription(e.target.value)} 
-            placeholder="הוסיפו תיאור מפורט"
+            placeholder="Add a detailed description"
           />
         </div>
-        <div className="input-group">
-          <label>תגים</label>
-          <input 
-            type="text" 
-            value={tags} 
-            onChange={(e) => setTags(e.target.value)} 
-            placeholder="הוסיפו תגים מופרדים בפסיקים"
-          />
-        </div>
-        <button onClick={handleSave} className="save-button">שמור</button>
+        <button onClick={handleSave} className="save-button">Save</button>
       </div>
     </div>
   );

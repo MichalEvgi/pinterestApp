@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { getBoardDetails } from '../services/api'; // Import the API function
+import { getBoardDetails } from '../services/api';
+import '../css/BoardDetail.css'; 
 
-const BoardDetails = ({ boardId , mediaUrl }) => {
-  const [board, setBoard] = useState(null);
+const BoardDetails = ({ board, onClose, mediaUrl }) => {
   const [images, setImages] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchBoardDetails = async () => {
       try {
-        const data = await getBoardDetails(boardId); // Use the imported API function
-        //setBoard(data.board);
-        setImages(data); // Assume the API returns board details with associated images
+        const data = await getBoardDetails(board.id);
+        setImages(data);
       } catch (error) {
         console.error('Failed to fetch board details', error);
         setError('Failed to load board details. Please try again.');
@@ -19,28 +18,38 @@ const BoardDetails = ({ boardId , mediaUrl }) => {
     };
 
     fetchBoardDetails();
-  }, [boardId]);
+  }, [board.id]);
 
   return (
-    <div>
-      {error ? (
-        <div>{error}</div>
-      ) : (
-        <>
-          {board && <h1>{board.title}</h1>}
-          <div className="image-grid">
-            {images.map((image) => (
-              <div key={image.id} className="image-card">
-                 {image.media_type === 'video' ? (
-                  <video src={mediaUrl+image.media_url} controls className="media-element" />
+    <div className="board-details-modal">
+      <div className="modal-details-content">
+        {error ? (
+          <div>{error}</div>
+        ) : (
+          <>
+            <span className="close-button" onClick={onClose}>&times;</span>
+            {board && <h1>{board.title}</h1>}
+            <div className="image-grid">
+              {images.map((image) => (
+                <div key={image.id} className="image-card">
+                   {image.media_type === 'video' ? (
+                      <video
+                        src={mediaUrl + image.media_url}
+                        className="media-img"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
                     ) : (
-                  <img src={mediaUrl+image.media_url} alt={image.description} className="media-element" />
-                   )}
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+                      <img src={mediaUrl + image.media_url} alt={image.description} className="media-img" />
+                    )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

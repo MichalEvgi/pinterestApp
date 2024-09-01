@@ -25,12 +25,16 @@ const FeedPage = () => {
   }, []);
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
     const filtered = mediaItems.filter((item) =>
-      item.description.toLowerCase().includes(e.target.value.toLowerCase())
+      item.title.toLowerCase().includes(searchTerm) || 
+      item.description.toLowerCase().includes(searchTerm)
     );
+    
     setFilteredItems(filtered);
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
@@ -80,7 +84,18 @@ const FeedPage = () => {
       <div className="media-grid">
         {filteredItems.map((item) => (
           <div key={item.id} className="media-item" onClick={() => handleMediaClick(item)}>
-            <img src={"http://localhost:3000/"+item.media_url} alt={item.description} className="media-img" />
+            {item.media_type === 'video' ? (
+              <video
+                src={`http://localhost:3000/${item.media_url}`}
+                className="media-img"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            ) : (
+              <img src={`http://localhost:3000/${item.media_url}`} alt={item.description} className="media-img" />
+            )}
           </div>
         ))}
       </div>

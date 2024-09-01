@@ -18,6 +18,15 @@ export const fetchFeed = async () => {
   return response.data;
 };
 
+export const getMyMedia = async (user_id) => {
+  try {
+    const response = await axios.get(`${API_URL}/pins/user/${user_id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getBoards = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/boards/user/${id}`);

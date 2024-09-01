@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getBoards, addBoard, deleteBoard } from '../services/api'; 
+import { getBoards, addBoard, deleteBoard, getMyMedia, deleteMedia} from '../services/api'; 
 import '../css/PersonalArea.css'; 
 import BoardDetails from './BoardDetail';
 
 const PersonalArea = () => {
   const [boards, setBoards] = useState([]); // State to store boards
+  const [myMedia, setMyMedia] = useState([]);
   const [newBoardTitle, setNewBoardTitle] = useState(''); // State for new board title
   const [showAddBoard, setShowAddBoard] = useState(false); // State to show/hide add board form
   const [loading, setLoading] = useState(true); // State to manage loading state
@@ -26,6 +27,22 @@ const PersonalArea = () => {
     };
 
     fetchBoards();
+  }, []);
+
+  useEffect(() => {
+    const fetchMyMedia = async () => {
+      try {
+        setLoading(false);
+        const data = await getMyMedia(currentUser.id);
+        setMyMedia(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to load boards. Please try again.');
+        setLoading(false);
+      }
+    };
+
+    fetchMyMedia();
   }, []);
 
   // Handle adding a new board
@@ -64,6 +81,16 @@ const PersonalArea = () => {
     }
     catch (err) {
       setError('Failed to delete board. Please try again.');
+    }
+  };
+
+  const handleDeleteMedia = async (pinId) => {
+    try{
+      await deleteMedia(pinId);
+      setBoards(myMedia.filter((m) => m.id!== pinId)); 
+    }
+    catch (err) {
+      setError('Failed to delete pin. Please try again.');
     }
   };
 
@@ -122,6 +149,34 @@ const PersonalArea = () => {
         </div>
       )}
       {selectedBoard && (<BoardDetails board={selectedBoard} onClose={handleCloseBoard} mediaUrl={"http://localhost:3000/"} />)}
+    
+      {currentUser?.role === 'creator' && (<div>
+        <h1>My Media</h1>
+        <div className="media-grid">
+        {myMedia.map((item) => (
+          <div key={item.id} className="board-item">
+            <div className="delete-icon" onClick={(e) => {
+              e.stopPropagation(); // Prevents board click event
+              handleDeleteMedia(item.id);
+            }}>🗑️</div>
+            {item.media_type === 'video' ? (
+              <video
+                src={`http://localhost:3000/${item.media_url}`}
+                className="media-img"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            ) : (
+              <img src={`http://localhost:3000/${item.media_url}`} alt={item.description} className="media-img" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      </div>)}
+    
     </div>
   );
 };

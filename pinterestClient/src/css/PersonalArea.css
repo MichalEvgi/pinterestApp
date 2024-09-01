@@ -89,4 +89,19 @@
   .save-board-button:hover {
     background-color: #0056b3;
   }
+
+  .delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 50%;
+    display: none; /* Initially hidden */
+  }
+  
+  .board-item:hover .delete-icon {
+    display: block; /* Show on hover */
+  }
   

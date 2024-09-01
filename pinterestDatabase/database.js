@@ -99,7 +99,7 @@ export async function getIsLikedByUser(userId, pinId) {
 }
 
 // comments functions
-export async function addComment(userId, pinId, content) {
+export async function addComment(pinId, userId, content) {
   const [result] = await pool.execute(
     'INSERT INTO comments (user_id, pin_id, content) VALUES (?, ?, ?)',
     [userId, pinId, content]
@@ -108,7 +108,9 @@ export async function addComment(userId, pinId, content) {
 }
 
 export async function getCommentsForPin(pinId) {
-  const [rows] = await pool.execute('SELECT * FROM comments WHERE pin_id = ? ORDER BY created_at DESC', [pinId]);
+  const [rows] = await pool.execute(`SELECT username, user_id, C.id as id, pin_id, content, C.created_at as created_at
+    FROM comments C JOIN users U ON U.id = C.user_id
+     WHERE pin_id = ? ORDER BY C.created_at DESC`, [pinId]);
   return rows;
 }
 

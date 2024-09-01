@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/MediaDisplay.css'; 
-import { addPictureToBoard, getBoards, getLikes, likePin, unlikePin, getIsUserLiked } from '../services/api'; // Import necessary API functions
+import { addPictureToBoard, getBoards, getLikes, likePin, unlikePin, getIsUserLiked, getCommentsForPin, addCommentToPin} from '../services/api'; // Import necessary API functions
 
 const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userId as a prop
   const [liked, setLiked] = useState(false);
@@ -46,6 +46,20 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
   }; fetchLikes();
   }, []);
 
+  useEffect(() => {
+    const fetchComments = async ()=>{
+      try{
+      const fetchedComments= await getCommentsForPin(media.id);
+      setComments(fetchedComments);
+    }
+    catch(error){
+      console.error('Failed to fetch comments', error);
+      setError('Failed to load comments. Please try again later.');
+    }
+  }; fetchComments();
+  }, []);
+
+
   const handleLike = () => {
     if(!liked){
       likePin(media.id, userId);
@@ -62,10 +76,23 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
     setComment(e.target.value);
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (comment.trim()) {
-      setComments([...comments, comment]);
-      setComment('');
+      const newComment = {
+        content: comment,
+        user_id: userId
+      };
+      try{
+        const data = await addCommentToPin(media.id, newComment);
+        newComment.id= data.commentId;
+        newComment.username= data.username;
+        setComments([...comments, newComment]);
+        setComment('');
+      }
+      catch(error){
+        console.error('Failed to add comment', error);
+        setError('Failed to add comment. Please try again later.');
+      }
     }
   };
 
@@ -138,7 +165,7 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
           <h3>Comments</h3>
           <div className="comment-list">
             {comments.map((comment, index) => (
-              <div key={index} className="comment-item">{comment}</div>
+              <div key={index} className="comment-item">{comment.username}: {comment.content}</div>
             ))}
           </div>
           <input 

@@ -134,6 +134,29 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// GET comments for pin
+router.get('/:id/comments', async (req, res) => {
+  try {
+    const comments = await dbFunctions.getCommentsForPin(req.params.id);
+    console.log(comments);
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// POST comment for pin
+router.post('/:id/comment', async (req, res) => {
+  try {
+    const { user_id, content } = req.body;
+    const commentId = await dbFunctions.addComment(req.params.id, user_id, content);
+    const user = await dbFunctions.getUserById(user_id);
+    res.status(201).json({ commentId, username: user.username });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to add comment', error: error.message });
+  }
+});
+
 // GET search pins
 router.get('/search', async (req, res) => {
   try {

@@ -104,6 +104,23 @@ export const addPictureToBoard = async (boardId, pinId) => {
    }
  }
 
+ export const getCommentsForPin = async (pinId) => {
+  try {
+    const response = await axios.get(`${API_URL}/pins/${pinId}/comments`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+ };
+
+ export const addCommentToPin = async (pinId, comment) => {
+  try {
+    const response = await axios.post(`${API_URL}/pins/${pinId}/comment`, comment);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+ };
 // export const deleteMedia = async (mediaId) => {
 //   const response = await axios.delete(`${API_URL}/media/${mediaId}`);
 //   return response.data;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBoards, addBoard } from '../services/api'; 
+import { getBoards, addBoard, deleteBoard } from '../services/api'; 
 import '../css/PersonalArea.css'; 
 import BoardDetails from './BoardDetail';
 
@@ -58,7 +58,13 @@ const PersonalArea = () => {
   };
 
   const handleDeleteBoard = async (boardId) => {
-    //to do
+    try{
+      await deleteBoard(boardId);
+      setBoards(boards.filter((b) => b.id!== boardId)); // Remove deleted board from the list
+    }
+    catch (err) {
+      setError('Failed to delete board. Please try again.');
+    }
   };
 
   if (loading) {

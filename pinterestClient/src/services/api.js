@@ -38,6 +38,16 @@ export const addBoard = async (boardTitle ,id) => {
   }
 };
 
+export const deleteBoard = async (boardId) => {
+  try{
+    const response = await axios.delete(`${API_URL}/boards/${boardId}`);
+    return response.data;
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
 export const getBoardDetails = async (boardId) => {
   try {
     const response = await axios.get(`${API_URL}/pins/board/${boardId}`);
@@ -56,6 +66,15 @@ export const addPictureToBoard = async (boardId, pinId) => {
     throw error;
   }
 };
+
+export const deletePictureFromBoard = async (boardId, pinId) => {
+  try {
+    const response = await axios.delete(`${API_URL}/boards/${boardId}/pins/${pinId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
  export const uploadMedia = async (mediaData) => {
    const response = await axios.post(`${API_URL}/pins`, mediaData,{ headers: {

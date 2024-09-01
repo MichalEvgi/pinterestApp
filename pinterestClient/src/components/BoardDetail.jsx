@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getBoardDetails } from '../services/api';
+import { getBoardDetails, deletePictureFromBoard } from '../services/api';
 import '../css/BoardDetail.css';
 
 const BoardDetails = ({ board, onClose, mediaUrl }) => {
@@ -20,8 +20,16 @@ const BoardDetails = ({ board, onClose, mediaUrl }) => {
     fetchBoardDetails();
   }, [board.id]);
 
-  const handleRemoveFromBoard = (imageId) => {
-    // Placeholder for remove logic
+  const handleRemoveFromBoard = async (imageId) => {
+    try{
+      await deletePictureFromBoard(board.id, imageId);
+      const updatedImages = images.filter(image => image.id !== imageId);
+      setImages(updatedImages);
+    }
+    catch (error) {
+      console.error('Failed to remove image from board', error);
+      setError('Failed to remove image from board. Please try again.');
+    }
     console.log('Remove image with ID:', imageId);
   };
 

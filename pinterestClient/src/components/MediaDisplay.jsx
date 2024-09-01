@@ -2,20 +2,19 @@ import React, { useState, useEffect } from 'react';
 import '../css/MediaDisplay.css'; 
 import { addPictureToBoard, getBoards, getLikes, likePin, unlikePin, getIsUserLiked, getCommentsForPin, addCommentToPin} from '../services/api'; // Import necessary API functions
 
-const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userId as a prop
+const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { 
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [error, setError] = useState('');
-  const [boards, setBoards] = useState([]); // State to store user's boards
-  const [selectedBoardId, setSelectedBoardId] = useState(''); // State to store selected board ID
+  const [boards, setBoards] = useState([]); 
+  const [selectedBoardId, setSelectedBoardId] = useState(''); 
   const [likes, setLikes] = useState(null);
 
   useEffect(() => {
-    // Fetch user's boards when the component mounts
     const fetchBoards = async () => {
       try {
-        const fetchedBoards = await getBoards(userId); // Pass userId to fetch boards
+        const fetchedBoards = await getBoards(userId); 
         setBoards(fetchedBoards);
         if (fetchedBoards.length > 0) {
           setSelectedBoardId(fetchedBoards[0].id); // Set default selected board to the first one
@@ -101,7 +100,7 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
     }
 
     try {
-      // Make the API call to save the media to the selected board
+    
       await addPictureToBoard(selectedBoardId, media.id);
       alert('Media saved to your board!');
     } catch (err) {

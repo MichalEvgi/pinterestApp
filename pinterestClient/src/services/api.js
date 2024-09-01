@@ -66,7 +66,6 @@ export const getBoardDetails = async (boardId) => {
   }
 };
 
-// Function to add a new picture to a board
 export const addPictureToBoard = async (boardId, pinId) => {
   try {
     const response = await axios.post(`${API_URL}/boards/${boardId}`, {pinId});
@@ -158,7 +157,4 @@ export const deletePictureFromBoard = async (boardId, pinId) => {
     throw error;
   }
  };
-// export const deleteMedia = async (mediaId) => {
-//   const response = await axios.delete(`${API_URL}/media/${mediaId}`);
-//   return response.data;
-// };
+

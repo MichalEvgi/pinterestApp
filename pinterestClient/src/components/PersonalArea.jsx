@@ -57,6 +57,10 @@ const PersonalArea = () => {
     setSelectedBoard(null); // Close the board
   };
 
+  const handleDeleteBoard = async (boardId) => {
+    //to do
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -75,6 +79,10 @@ const PersonalArea = () => {
             className="board-item"
             onClick={() => handleBoardClick(board)}
           >
+            <div className="delete-icon" onClick={(e) => {
+              e.stopPropagation(); // Prevents board click event
+              handleDeleteBoard(board.id);
+            }}>🗑️</div>
             <div className="board-thumbnail">
               { board.media.slice(0, 1).map((media, index) => (
                 <img

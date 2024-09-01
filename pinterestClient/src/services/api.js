@@ -83,6 +83,16 @@ export const deletePictureFromBoard = async (boardId, pinId) => {
    return response.data;
  };
 
+ export const deleteMedia = async (pinId) => {
+  try{
+    const response = await axios.delete(`${API_URL}/pins/${pinId}`);
+    return response.data;
+  }
+  catch (error) {
+    throw error;
+  }
+ };
+
  export const getLikes = async (pinId) => {
    try {
     const response = await axios.get(`${API_URL}/pins/${pinId}/likes`);

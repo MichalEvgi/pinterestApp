@@ -76,14 +76,14 @@ const PersonalArea = () => {
             onClick={() => handleBoardClick(board)}
           >
             <div className="board-thumbnail">
-              {/* { board.media.slice(0, 3).map((media, index) => (
+              { board.media.slice(0, 1).map((media, index) => (
                 <img
                   key={index}
                   src={"http://localhost:3000/"+media.media_url}
                   alt={board.title}
                   className="thumbnail-image"
                 />
-              ))} */}
+              ))}
             </div>
             <div className="board-title">{board.title}</div>
           </div>

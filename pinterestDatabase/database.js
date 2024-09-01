@@ -45,6 +45,10 @@ export async function getPinsByBoardId(boardId) {
     WHERE board_id = ?`, [boardId]);
   return rows;
 } 
+export async function getPinsByUserId(userId) {
+  const [rows] = await pool.execute('SELECT * FROM pins WHERE user_id =?', [userId]);
+  return rows;
+}
 export async function getPinsByBoardIdWithLimit(boardId, limit) {
   const [rows] = await pool.execute(`SELECT p.id as id, user_id, title, description, media_url, media_type, created_at 
     FROM pins p JOIN board_pins b ON b.pin_id = p.id 

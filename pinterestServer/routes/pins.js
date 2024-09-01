@@ -43,6 +43,16 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+//GET pin by user id
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const pins = await dbFunctions.getPinsByUserId(req.params.userId);
+    res.json(pins);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // GET pin likes
 router.get('/:id/likes', async (req, res) => {
   try {

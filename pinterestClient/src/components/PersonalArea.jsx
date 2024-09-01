@@ -122,6 +122,12 @@ const PersonalArea = () => {
         </div>
       )}
       {selectedBoard && (<BoardDetails board={selectedBoard} onClose={handleCloseBoard} mediaUrl={"http://localhost:3000/"} />)}
+      {currentUser.role === 'creator' && (
+      <div className="my-media-section">
+        <h1>My Media</h1>
+        {/* Implementation for displaying user's media */}
+      </div>
+)}
     </div>
   );
 };

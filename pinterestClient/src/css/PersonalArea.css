@@ -105,3 +105,11 @@
     display: block; /* Show on hover */
   }
   
+  .my-media-section {
+    margin-top: 20px;
+  }
+  
+  .my-media-section h2 {
+    font-size: 24px;
+    color: #333;
+  }

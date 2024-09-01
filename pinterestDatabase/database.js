@@ -37,7 +37,7 @@ export async function getPins() {
   }
 
 export async function getPinsWithOffset(start, offset){
-  const [rows] = await pool.execute('SELECT * FROM pins LIMIT ?,?', [start, offset]);
+  const [rows] = await pool.execute(`SELECT * FROM pins LIMIT ${parseInt(start)}, ${parseInt(offset)}`);
   return rows;
 }
 export async function getPinById(pinId) {

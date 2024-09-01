@@ -30,6 +30,18 @@ router.get('/', async (req, res) => {
     }
   });
 
+  // GET pins with start and offset
+router.get('/start=:start&offset=:offset', async (req, res) => {
+  try {
+      const { start, offset } = req.params;
+      const pins = await dbFunctions.getPinsWithOffset(start, offset);
+      res.json(pins);
+    }
+   catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // GET pin by ID
 router.get('/:id', async (req, res) => {
   try {

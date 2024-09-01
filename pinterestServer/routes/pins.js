@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import fs from 'fs/promises';
 import path from 'node:path';
 import * as dbFunctions from '../../pinterestDatabase/database.js';
 
@@ -142,6 +143,16 @@ router.put('/:id', async (req, res) => {
 // DELETE pin
 router.delete('/:id', async (req, res) => {
   try {
+    const pin = await dbFunctions.getPinById(req.params.id);
+    if (!pin) {
+      return res.status(404).json({ message: 'Pin not found' });
+    }
+    try {
+      await fs.unlink(pin.media_url);
+      console.log(`the file ${pin.media_url} deleted successfully`);
+    } catch (fileError) {
+      console.error(`error deleting file: ${pin.media_url}:`, fileError);
+    }
     await dbFunctions.deletePin(req.params.id);
     res.json({ message: 'Pin deleted successfully' });
   } catch (error) {

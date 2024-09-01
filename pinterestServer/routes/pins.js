@@ -138,7 +138,6 @@ router.delete('/:id', async (req, res) => {
 router.get('/:id/comments', async (req, res) => {
   try {
     const comments = await dbFunctions.getCommentsForPin(req.params.id);
-    console.log(comments);
     res.json(comments);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

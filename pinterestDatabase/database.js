@@ -111,6 +111,11 @@ export async function addComment(pinId, userId, content) {
   return result.insertId;
 }
 
+export async function getCommentById(commentId) {
+  const [rows] = await pool.execute('SELECT * FROM comments WHERE id =?', [commentId]);
+  return rows[0];
+}
+
 export async function getCommentsForPin(pinId) {
   const [rows] = await pool.execute(`SELECT username, user_id, C.id as id, pin_id, content, C.created_at as created_at
     FROM comments C JOIN users U ON U.id = C.user_id

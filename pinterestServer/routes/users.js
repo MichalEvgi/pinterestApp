@@ -66,7 +66,6 @@ const roleConverter= (role)=>{
   switch (role) {
     case 'viewer': return 'whatcher'; break;
     case 'creator': return 'creator'; break;
-    case 'admin': return'manager'; break;
     default:
       return 'Unknown';
   }
@@ -76,7 +75,6 @@ const converFromRole = (role)=>{
   switch (role) {
     case 'whatcher': return 1; break;
     case 'creator': return 2; break;
-    case'manager': return 3; break;
     default:
       return 0;
   }

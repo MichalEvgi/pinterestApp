@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/MediaDisplay.css'; 
-import { addPictureToBoard, getBoards } from '../services/api'; // Import necessary API functions
+import { addPictureToBoard, getBoards, getLikes, likePin, unlikePin, getIsUserLiked } from '../services/api'; // Import necessary API functions
 
 const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userId as a prop
   const [liked, setLiked] = useState(false);
@@ -9,6 +9,7 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
   const [error, setError] = useState('');
   const [boards, setBoards] = useState([]); // State to store user's boards
   const [selectedBoardId, setSelectedBoardId] = useState(''); // State to store selected board ID
+  const [likes, setLikes] = useState(null);
 
   useEffect(() => {
     // Fetch user's boards when the component mounts
@@ -30,7 +31,30 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
     }
   }, [userId]); // Re-run the effect when userId changes
 
+  useEffect(() => {
+    const fetchLikes = async ()=>{
+    try{
+      const likesCount= await getLikes( media.id);
+      setLikes(likesCount);
+      const isUserLiked = await getIsUserLiked(media.id, userId);
+      setLiked(isUserLiked);
+    }
+    catch(error){
+      console.error('Failed to fetch likes', error);
+      setError('Failed to load likes. Please try again later.');
+    }
+  }; fetchLikes();
+  }, []);
+
   const handleLike = () => {
+    if(!liked){
+      likePin(media.id, userId);
+      setLikes(likes+1);
+    }
+    else{
+      unlikePin(media.id, userId);
+      setLikes(likes-1);
+    }
     setLiked(!liked);
   };
 
@@ -102,6 +126,7 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => { // Accept userI
 
         {/* Like, Save and Comment functionality */}
         <div className="media-actions">
+          <p>Likes: {likes}</p>
           <button onClick={handleLike} className={`like-button ${liked ? 'liked' : ''}`}>
             {liked ? 'Unlike' : 'Like'}
           </button>

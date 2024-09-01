@@ -41,8 +41,14 @@ export async function getPinById(pinId) {
 } 
 export async function getPinsByBoardId(boardId) {
   const [rows] = await pool.execute(`SELECT p.id as id, user_id, title, description, media_url, media_type, created_at 
-    FROM pins p JOIN boards_pins b ON b.pin_id = p.id 
+    FROM pins p JOIN board_pins b ON b.pin_id = p.id 
     WHERE board_id = ?`, [boardId]);
+  return rows;
+} 
+export async function getPinsByBoardIdWithLimit(boardId, limit) {
+  const [rows] = await pool.execute(`SELECT p.id as id, user_id, title, description, media_url, media_type, created_at 
+    FROM pins p JOIN board_pins b ON b.pin_id = p.id 
+    WHERE board_id = ? LIMIT ${parseInt(limit)}`, [boardId]);
   return rows;
 } 
 export async function updatePin(pinId, title, description) {
@@ -83,6 +89,12 @@ export async function removeLike(userId, pinId) {
 
 export async function getLikesCountForPin(pinId) {
   const [rows] = await pool.execute('SELECT COUNT(*) as count FROM likes WHERE pin_id = ?', [pinId]);
+  return rows[0].count;
+}
+
+export async function getIsLikedByUser(userId, pinId) {
+  const [rows] = await pool.execute('SELECT COUNT(*) as count FROM likes WHERE pin_id = ? AND user_id = ?'
+    , [pinId, userId]);
   return rows[0].count;
 }
 

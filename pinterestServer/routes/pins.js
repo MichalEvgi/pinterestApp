@@ -43,6 +43,48 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// GET pin likes
+router.get('/:id/likes', async (req, res) => {
+  try {
+    const count = await dbFunctions.getLikesCountForPin(req.params.id);
+    console.log(count);
+    res.status(202).json(count);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// GET pin liked by user
+router.get('/:pinId/like/user/:userId', async (req, res) => {
+  try {
+    const count = await dbFunctions.getIsLikedByUser(req.params.userId, req.params.pinId);
+    res.status(200).json(count);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// POST pin like
+router.post('/:pinId/like/user/:userId', async (req, res) => {
+  try {
+    await dbFunctions.addLike(req.params.userId, req.params.pinId);
+    res.status(200).json("like added successfully");
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// DELETE pin like
+router.delete('/:pinId/like/user/:userId', async (req, res) => {
+  try {
+    await dbFunctions.removeLike(req.params.userId, req.params.pinId);
+    res.status(200).json("like removed successfully");
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // POST create new pin
 router.post('/', upload.single('file'), async (req, res) => {
   if (!req.file) {
@@ -64,9 +106,8 @@ router.post('/', upload.single('file'), async (req, res) => {
 // GET pins by board id
 router.get('/board/:boardId', async (req, res) => {
   try {
-    //to do find error
     const pins = await dbFunctions.getPinsByBoardId(req.params.boardId);
-      res.json(pins);
+    res.status(200).json(pins);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

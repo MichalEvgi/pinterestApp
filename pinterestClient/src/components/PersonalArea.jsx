@@ -63,7 +63,7 @@ const PersonalArea = () => {
 
   return (
     <div className="personal-area">
-      {selectedBoardId && <BoardDetails boardId={selectedBoardId} />}
+      {selectedBoardId && <BoardDetails boardId={selectedBoardId} mediaUrl="http://localhost:3000/" />}
       <h1>My Boards</h1>
       <div className="boards-container">
         {Array.isArray(boards) && boards.map((board) => (
@@ -73,10 +73,10 @@ const PersonalArea = () => {
             onClick={() => handleBoardClick(board.id)}
           >
             <div className="board-thumbnail">
-              {false && board.media.slice(0, 3).map((media, index) => (
+              { board.media.slice(0, 3).map((media, index) => (
                 <img
                   key={index}
-                  src={media.url}
+                  src={"http://localhost:3000/"+media.media_url}
                   alt={board.title}
                   className="thumbnail-image"
                 />

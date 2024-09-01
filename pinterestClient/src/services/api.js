@@ -50,7 +50,7 @@ export const getBoardDetails = async (boardId) => {
 // Function to add a new picture to a board
 export const addPictureToBoard = async (boardId, pinId) => {
   try {
-    const response = await axios.post(`${API_URL}/boards/${boardId}`, pinId);
+    const response = await axios.post(`${API_URL}/boards/${boardId}`, {pinId});
     return response.data;
   } catch (error) {
     throw error;
@@ -63,6 +63,46 @@ export const addPictureToBoard = async (boardId, pinId) => {
   }});
    return response.data;
  };
+
+ export const getLikes = async (pinId) => {
+   try {
+    const response = await axios.get(`${API_URL}/pins/${pinId}/likes`);
+    return response.data;
+   } catch (error) {
+    throw error;
+   }
+ };
+
+ export const likePin = async (pinId, userId) => {
+  try{
+    const response = await axios.post(`${API_URL}/pins/${pinId}/like/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+   }
+ }
+
+ export const unlikePin = async (pinId, userId) => {
+  try{
+    const response = await axios.delete(`${API_URL}/pins/${pinId}/like/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+   }
+ }
+
+ export const getIsUserLiked = async (pinId, userId) => {
+  try{
+    const response = await axios.get(`${API_URL}/pins/${pinId}/like/user/${userId}`);
+    console.log(response.data);
+    if (response.data == 0)
+      return false;
+    else
+      return true;
+  } catch (error) {
+    throw error;
+   }
+ }
 
 // export const deleteMedia = async (mediaId) => {
 //   const response = await axios.delete(`${API_URL}/media/${mediaId}`);

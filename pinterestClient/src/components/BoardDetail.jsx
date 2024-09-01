@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getBoardDetails } from '../services/api'; // Import the API function
 
-const BoardDetails = ({ boardId }) => {
+const BoardDetails = ({ boardId , mediaUrl }) => {
   const [board, setBoard] = useState(null);
   const [images, setImages] = useState([]);
   const [error, setError] = useState('');
@@ -11,7 +11,7 @@ const BoardDetails = ({ boardId }) => {
       try {
         const data = await getBoardDetails(boardId); // Use the imported API function
         //setBoard(data.board);
-        setImages(data.images); // Assume the API returns board details with associated images
+        setImages(data); // Assume the API returns board details with associated images
       } catch (error) {
         console.error('Failed to fetch board details', error);
         setError('Failed to load board details. Please try again.');
@@ -31,7 +31,11 @@ const BoardDetails = ({ boardId }) => {
           <div className="image-grid">
             {images.map((image) => (
               <div key={image.id} className="image-card">
-                <img src={image.media_url} alt={image.description} />
+                 {image.media_type === 'video' ? (
+                  <video src={mediaUrl+image.media_url} controls className="media-element" />
+                    ) : (
+                  <img src={mediaUrl+image.media_url} alt={image.description} className="media-element" />
+                   )}
               </div>
             ))}
           </div>

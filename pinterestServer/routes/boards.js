@@ -7,8 +7,12 @@ const router = express.Router();
 router.get('/user/:userId', async (req, res) => {
   try {
     const boards = await dbFunctions.getBoardsByUserId(req.params.userId);
-    res.json(boards);
+    for (const board of boards) {
+      board.media = await dbFunctions.getPinsByBoardIdWithLimit(board.id, 1);
+    }
+    res.status(202).json(boards);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Failed to get boards', error: error.message });
   }
 });
@@ -27,9 +31,9 @@ router.post('/user/:userId', async (req, res) => {
 // POST add pin to board
 router.post('/:boardId', async (req, res) => {
   try {
-    const  pinId = req.body;
+    const  {pinId} = req.body;
     await dbFunctions.addPinToBoard(req.params.boardId, pinId);
-    res.json({ message: 'Pin added to board successfully' });
+    res.status(200).json({ message: 'Pin added to board successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to add pin to board', error: error.message });
   }

@@ -94,7 +94,6 @@ export const addPictureToBoard = async (boardId, pinId) => {
  export const getIsUserLiked = async (pinId, userId) => {
   try{
     const response = await axios.get(`${API_URL}/pins/${pinId}/like/user/${userId}`);
-    console.log(response.data);
     if (response.data == 0)
       return false;
     else

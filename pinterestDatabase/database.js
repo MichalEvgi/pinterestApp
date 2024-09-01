@@ -35,6 +35,11 @@ export async function getPins() {
     const [rows] = await pool.execute('SELECT * FROM pins');
     return rows;
   }
+
+export async function getPinsWithOffset(start, offset){
+  const [rows] = await pool.execute('SELECT * FROM pins LIMIT ?,?', [start, offset]);
+  return rows;
+}
 export async function getPinById(pinId) {
   const [rows] = await pool.execute('SELECT * FROM pins WHERE id = ?', [pinId]);
   return rows[0];
@@ -67,6 +72,11 @@ export async function deletePin(pinId) {
 export async function createBoard(userId, title) {
   const [result] = await pool.execute('INSERT INTO boards (user_id, title) VALUES (?, ?)', [userId, title]);
   return result.insertId;
+}
+
+export async function getBoardById(boardId) {
+  const [rows] = await pool.execute('SELECT * FROM boards WHERE id =?', [boardId]);
+  return rows[0];
 }
 
 export async function getBoardsByUserId(userId) {

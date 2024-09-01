@@ -38,6 +38,7 @@ const PersonalArea = () => {
     if (newBoardTitle.trim()) {
       try {
         const newBoard = await addBoard(newBoardTitle , currentUser.id); // Use addBoard from api.js
+        newBoard.media  = [];
         setBoards([...boards, newBoard]); // Append new board to the existing list
         setNewBoardTitle('');
         setShowAddBoard(false);

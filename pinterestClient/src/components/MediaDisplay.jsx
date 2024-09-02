@@ -113,79 +113,71 @@ const MediaDisplay = ({ media, onClose, userId, mediaUrl }) => {
     <div className="media-modal">
       <div className="modal-content">
         <span className="close-button" onClick={onClose}>&times;</span>
-        
-        {/* Display media */}
-        <div className="media-container">
-          {media.media_type === 'video' ? (
-            <video src={mediaUrl+media.media_url} controls className="media-element" />
-          ) : (
-            <img src={mediaUrl+media.media_url} alt={media.description} className="media-element" />
-          )}
-        </div>
-
-        {/* Media description */}
-        <div className="media-description">
+        <div className="media-header">
           <h2>{media.title}</h2>
           <p>{media.description}</p>
         </div>
-
-        {/* Display error if there is one */}
-        {error && <div className="error-message">{error}</div>}
-
-        {/* Dropdown to select board */}
-        <div className="select-board">
-          <label htmlFor="board-select">Select Board:</label>
-          <select 
-            id="board-select" 
-            value={selectedBoardId} 
-            onChange={(e) => setSelectedBoardId(e.target.value)}
-          >
-            {boards.map((board) => (
-              <option key={board.id} value={board.id}>
-                {board.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Like, Save and Comment functionality */}
-        <div className="media-actions">
-          <p>Likes: {likes}</p>
-          <button onClick={handleLike} className={`like-button ${liked ? 'liked' : ''}`}>
-            {liked ? 'Unlike' : 'Like'}
-          </button>
-          <button onClick={handleSaveMedia} className="save-button">Save</button>
-        </div>
-
-        {/* Comment section */}
-        <div className="comment-section">
-          <h3>Comments</h3>
-          <div className="comment-list">
-            {comments.map((comment, index) => (
-              <div key={index} className="comment-item"><div>{comment.username}: {comment.content}</div>
-              <p>{new Date(comment.created_at).toLocaleString('en-US', {
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: 'numeric', 
-                minute: 'numeric'
-              })}</p>
-              </div>
-              
-            ))}
+        <div className="media-body">
+          <div className="interaction-section">
+            <div className="select-board">
+              <label htmlFor="board-select">Choose board:</label>
+              <select 
+                id="board-select" 
+                value={selectedBoardId} 
+                onChange={(e) => setSelectedBoardId(e.target.value)}
+              >
+                {boards.map((board) => (
+                  <option key={board.id} value={board.id}>{board.title}</option>
+                ))}
+              </select>
+            </div>
+            <button onClick={handleSaveMedia} className="save-button">Save</button>
           </div>
-          <input 
-            type="text" 
-            value={comment} 
-            onChange={handleCommentChange} 
-            placeholder="Add a comment..." 
-            className="comment-input" 
-          />
-          <button onClick={handleAddComment} className="add-comment-button">Add Comment</button>
+          <div className="media-container">
+            {media.media_type === 'video' ? (
+              <video src={mediaUrl+media.media_url} controls className="media-element" />
+            ) : (
+              <img src={mediaUrl+media.media_url} alt={media.description} className="media-element" />
+            )}
+            <svg onClick={handleLike} className={`heart-icon ${liked ? 'filled' : ''}`} viewBox="0 0 32 29.6">
+            <path d="M23.6,0C20.4,0,17.9,2.5,17.9,5.7c0,0,0,0,0,0.1c0,0,0,0,0-0.1C17.9,2.5,15.4,0,12.2,0C9,0,6.5,2.5,6.5,5.7
+                c0,3.4,3.3,6.4,8.5,11.6l2.9,2.9l2.9-2.9c5.2-5.2,8.5-8.2,8.5-11.6C29.3,2.5,26.8,0,23.6,0z"/>
+            </svg>
+            <p>{likes} Likes</p>
+          </div>
+        </div>
+        <div className="media-footer">
+          <div className="comment-section">
+            <h3>Comments</h3>
+            <div className="comment-list">
+              {comments.map((comment, index) => (
+                <div key={index} className="comment-item">
+                  <div>{comment.username}: {comment.content}</div>
+                  <p>{new Date(comment.created_at).toLocaleString('en-US', {
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: 'numeric', 
+                    minute: 'numeric'
+                  })}</p>
+                </div>
+              ))}
+            </div>
+            <input 
+              type="text" 
+              value={comment} 
+              onChange={handleCommentChange} 
+              placeholder="Add a comment..." 
+              className="comment-input" 
+            />
+            <button onClick={handleAddComment} className="add-comment-button">Add Comment</button>
+          </div>
         </div>
       </div>
     </div>
   );
+  
+  
 };
 
 export default MediaDisplay;

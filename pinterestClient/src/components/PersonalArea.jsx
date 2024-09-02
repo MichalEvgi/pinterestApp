@@ -117,14 +117,32 @@ const PersonalArea = () => {
               handleDeleteBoard(board.id);
             }}>🗑️</div>
             <div className="board-thumbnail">
-              { board.media.slice(0, 1).map((media, index) => (
-                <img
-                  key={index}
-                  src={"http://localhost:3000/"+media.media_url}
-                  alt={board.title}
-                  className="thumbnail-image"
-                />
-              ))}
+              {
+                board.media.slice(0, 1).map((media, index) => {
+                  if (media.media_type === 'video') {
+                    return (
+                      <video
+                        key={index}
+                        src={`http://localhost:3000/${media.media_url}`}
+                        className="thumbnail-image"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                    );
+                  } else {
+                    return (
+                      <img
+                        key={index}
+                        src={`http://localhost:3000/${media.media_url}`}
+                        alt={media.description}
+                        className="thumbnail-image"
+                      />
+                    );
+                  }
+                })
+              }
             </div>
             <div className="board-title">{board.title}</div>
           </div>

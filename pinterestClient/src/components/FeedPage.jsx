@@ -49,7 +49,7 @@ const FeedPage = () => {
         fetchMedia(startPin);
       }
     };
-    const debouncedHandleScroll = debounce(handleScroll, 200);
+    const debouncedHandleScroll = debounce(handleScroll, 50);
     window.addEventListener('wheel', debouncedHandleScroll);
 
     return () => {

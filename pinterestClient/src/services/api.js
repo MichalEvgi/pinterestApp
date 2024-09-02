@@ -18,6 +18,11 @@ export const fetchFeed = async () => {
   return response.data;
 };
 
+export const fetchFeedWithOffset = async (start, offset) => {
+  const response = await axios.get(`${API_URL}/pins/start=${start}&offset=${offset}`);
+  return response.data;
+};
+
 export const getMyMedia = async (user_id) => {
   try {
     const response = await axios.get(`${API_URL}/pins/user/${user_id}`);

@@ -1,40 +1,88 @@
 import React, { useEffect, useState } from 'react';
-import { fetchFeed } from '../services/api'; 
-import MediaModal from './MediaDisplay'; 
-import '../css/FeedPage.css'; 
-
+import { fetchFeedWithOffset } from '../services/api';
+import MediaModal from './MediaDisplay';
+import '../css/FeedPage.css';
+let ready = false;
 const FeedPage = () => {
   const [mediaItems, setMediaItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
-  const [selectedMedia, setSelectedMedia] = useState(null); 
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  let startPin= 0;
+  const [isLoading, setIsLoading] = useState(false);
+  let hasMore = true;
+  const offset = 10;
+
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
+  const fetchMedia = async (start = 0) => {
+    try {
+      setIsLoading(true);
+      const data = await fetchFeedWithOffset(start, offset);
+      setMediaItems((prevItems) => [...prevItems, ...data]);
+      if (data.length < offset) {
+        hasMore=false;
+      }
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Failed to fetch media items', err);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchMedia = async () => {
-      try {
-        const data = await fetchFeed();
-        setMediaItems(data);
-        setFilteredItems(data);
-      } catch (err) {
-        console.error('Failed to fetch media items', err);
+    if(ready){
+      fetchMedia(0);
+    }
+    ready = true;
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop + 100 >= document.documentElement.scrollHeight &&
+        !isLoading &&
+        hasMore
+      ) {
+        
+        startPin = startPin + offset;
+        fetchMedia(startPin);
       }
     };
+    const debouncedHandleScroll = debounce(handleScroll, 200);
+    window.addEventListener('wheel', debouncedHandleScroll);
 
-    fetchMedia();
+    return () => {
+      window.removeEventListener('wheel', debouncedHandleScroll);
+    };
   }, []);
+
+  const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = mediaItems.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    } else {
+      setFilteredItems(mediaItems);
+    }
+  }, [searchTerm, mediaItems]);
 
   const handleSearchChange = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchTerm(searchTerm);
-    const filtered = mediaItems.filter((item) =>
-      item.title.toLowerCase().includes(searchTerm) || 
-      item.description.toLowerCase().includes(searchTerm)
-    );
-    
-    setFilteredItems(filtered);
   };
-  
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
@@ -100,8 +148,15 @@ const FeedPage = () => {
         ))}
       </div>
 
+      {isLoading && <div className="loading">Loading...</div>}
+
       {selectedMedia && (
-        <MediaModal media={selectedMedia} onClose={handleCloseModal} userId={currentUser.id} mediaUrl={"http://localhost:3000/"}/>
+        <MediaModal
+          media={selectedMedia}
+          onClose={handleCloseModal}
+          userId={currentUser.id}
+          mediaUrl={"http://localhost:3000/"}
+        />
       )}
     </div>
   );

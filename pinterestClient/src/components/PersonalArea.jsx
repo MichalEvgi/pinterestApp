@@ -87,7 +87,7 @@ const PersonalArea = () => {
   const handleDeleteMedia = async (pinId) => {
     try{
       await deleteMedia(pinId);
-      setBoards(myMedia.filter((m) => m.id!== pinId)); 
+      setMyMedia(myMedia.filter((m) => m.id!== pinId)); 
     }
     catch (err) {
       setError('Failed to delete pin. Please try again.');
@@ -174,7 +174,7 @@ const PersonalArea = () => {
         {myMedia.map((item) => (
           <div key={item.id} className="board-item">
             <div className="delete-icon" onClick={(e) => {
-              e.stopPropagation(); // Prevents board click event
+              e.stopPropagation(); 
               handleDeleteMedia(item.id);
             }}>🗑️</div>
             {item.media_type === 'video' ? (

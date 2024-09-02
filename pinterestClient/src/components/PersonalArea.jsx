@@ -27,7 +27,7 @@ const PersonalArea = () => {
     };
 
     fetchBoards();
-  }, []);
+  }, [myMedia]);
 
   useEffect(() => {
     const fetchMyMedia = async () => {

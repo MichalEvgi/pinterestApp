@@ -170,7 +170,7 @@ const PersonalArea = () => {
     
       {currentUser?.role === 'creator' && (<div>
         <h1>My Media</h1>
-        <div className="media-grid">
+        <div className="boards-container">
         {myMedia.map((item) => (
           <div key={item.id} className="board-item">
             <div className="delete-icon" onClick={(e) => {

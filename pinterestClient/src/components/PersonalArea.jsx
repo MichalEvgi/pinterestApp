@@ -102,8 +102,17 @@ const PersonalArea = () => {
     return <div>{error}</div>;
   }
 
+  const goToFeedPage = () => {
+    window.location.href = '/feed';
+  };
+
   return (
     <div className="personal-area">
+      <div className="header">
+        <button className="home-button" onClick={goToFeedPage}>
+          Home
+        </button>
+      </div>
       <h1>My Boards</h1>
       <div className="boards-container">
         {Array.isArray(boards) && boards.map((board) => (

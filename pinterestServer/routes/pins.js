@@ -110,16 +110,23 @@ router.delete('/:pinId/like/user/:userId', async (req, res) => {
 
 // POST create new pin
 router.post('/', upload.single('file'), async (req, res) => {
+  const { username, password } = req.body;
+  if (!username ||!password) {
+    return res.status(400).json({ message: 'Missing username or password' });
+  }
+  const user = await dbFunctions.getUserByNameAndPassword(username, password);
+  if(!user || user.role != "creator"){
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
   if (!req.file) {
     return res.status(400).send('file not found');
   }
-  console.log(req.file);
   const filePath = req.file.path;
   const fileType = req.file.mimetype.startsWith('image') ? 'image' : 'video';
 
   try {
     const {  title, description} = req.body;
-    const pinId = await dbFunctions.createPin(2, title, description, filePath, fileType);
+    const pinId = await dbFunctions.createPin(user.id, title, description, filePath, fileType);
     res.status(201).json({ pinId });
   } catch (error) {
     res.status(500).json({ message: 'Failed to create pin', error: error.message });
@@ -138,6 +145,14 @@ router.get('/board/:boardId', async (req, res) => {
 
 // PUT update pin
 router.put('/:id', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username ||!password) {
+    return res.status(400).json({ message: 'Missing username or password' });
+  }
+  const user = await dbFunctions.getUserByNameAndPassword(username, password);
+  if(!user || user.role != "creator"){
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
   try {
     const { title, description } = req.body;
     await dbFunctions.updatePin(req.params.id, title, description);
@@ -149,6 +164,14 @@ router.put('/:id', async (req, res) => {
 
 // DELETE pin
 router.delete('/:id', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username ||!password) {
+    return res.status(400).json({ message: 'Missing username or password' });
+  }
+  const user = await dbFunctions.getUserByNameAndPassword(username, password);
+  if(!user || user.role != "creator"){
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
   try {
     const pin = await dbFunctions.getPinById(req.params.id);
     if (!pin) {

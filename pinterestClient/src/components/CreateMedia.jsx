@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { uploadMedia } from '../services/api';
 import '../css/CreateMedia.css';
 
-const CreateMedia = ({ onSaveMedia }) => {
+const CreateMedia = () => {
   const [mediaFile, setMediaFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [tags, setTags] = useState('');
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   
   const handleMediaUpload = (event) => {
     setMediaFile(event.target.files[0]);
@@ -18,6 +18,8 @@ const CreateMedia = ({ onSaveMedia }) => {
       formData.append('file', mediaFile);
       formData.append('title', title);
       formData.append('description', description);
+      formData.append('username',currentUser.username);
+      formData.append('password', currentUser.password);
       
   
       try {

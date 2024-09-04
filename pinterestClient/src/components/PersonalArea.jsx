@@ -86,7 +86,7 @@ const PersonalArea = () => {
 
   const handleDeleteMedia = async (pinId) => {
     try{
-      await deleteMedia(pinId);
+      await deleteMedia(pinId, currentUser.username, currentUser.password);
       setMyMedia(myMedia.filter((m) => m.id!== pinId)); 
     }
     catch (err) {

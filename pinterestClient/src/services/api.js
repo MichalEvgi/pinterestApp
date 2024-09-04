@@ -96,9 +96,9 @@ export const deletePictureFromBoard = async (boardId, pinId) => {
    return response.data;
  };
 
- export const deleteMedia = async (pinId) => {
+ export const deleteMedia = async (pinId, username, password) => {
   try{
-    const response = await axios.delete(`${API_URL}/pins/${pinId}`);
+    const response = await axios.delete(`${API_URL}/pins/${pinId}`,{data:{username,password}});
     return response.data;
   }
   catch (error) {

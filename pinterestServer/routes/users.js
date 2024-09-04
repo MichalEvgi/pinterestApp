@@ -9,7 +9,7 @@ router.get('/byId/:id', async (req, res) => {
     const user = await dbFunctions.getUserById(req.params.id);
     if (user) {
       user.role = roleConverter(user.role);
-      res.json(user);
+      res.status(200).json(user);
     } else {
       res.status(404).json({ message: 'User not found' });
     }
@@ -26,7 +26,7 @@ router.get('/login', async (req, res) => {
     const user = await dbFunctions.getUserByNameAndPassword(username, password);
     if (user) {
       user.role = roleConverter(user.role);
-      res.json(user);
+      res.status(200).json(user);
     } else {
       res.status(404).json({ message: 'User not found' });
     }
@@ -56,7 +56,7 @@ router.put('/:id/role', async (req, res) => {
     let { role } = req.body;
     role = converFromRole(role);
     await dbFunctions.updateUserRole(req.params.id, role);
-    res.json({ message: 'User role updated successfully' });
+    res.status(201).json({ message: 'User role updated successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update user role', error: error.message });
   }

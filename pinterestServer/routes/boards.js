@@ -10,7 +10,7 @@ router.get('/user/:userId', async (req, res) => {
     for (const board of boards) {
       board.media = await dbFunctions.getPinsByBoardIdWithLimit(board.id, 1);
     }
-    res.status(202).json(boards);
+    res.status(200).json(boards);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Failed to get boards', error: error.message });
@@ -46,7 +46,7 @@ router.delete('/:boardId/pins/:pinId', async (req, res) => {
     await dbFunctions.removePinFromBoard(req.params.boardId, req.params.pinId);
     res.json({ message: 'Pin removed from board successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to remove pin from board', error: error.message });
+    res.status(200).json({ message: 'Failed to remove pin from board', error: error.message });
   }
 });
 
@@ -54,7 +54,7 @@ router.delete('/:boardId/pins/:pinId', async (req, res) => {
 router.delete('/:boardId', async (req, res) => {
   try{
     await dbFunctions.deleteBoard(req.params.boardId);
-    res.json({ message: 'Board deleted successfully' });
+    res.status(200).json({ message: 'Board deleted successfully' });
   }
   catch(error){
     res.status(500).json({ message: 'Failed to delete board', error: error.message });

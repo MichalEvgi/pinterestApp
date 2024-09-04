@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 router.get('/', async (req, res) => {
     try {
       const pins = await dbFunctions.getPins();
-        res.json(pins);
+        res.status(200).json(pins);
       }
      catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
@@ -35,7 +35,7 @@ router.get('/start=:start&offset=:offset', async (req, res) => {
   try {
       const { start, offset } = req.params;
       const pins = await dbFunctions.getPinsWithOffset(start, offset);
-      res.json(pins);
+      res.status(200).json(pins);
     }
    catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
   try {
     const pin = await dbFunctions.getPinById(req.params.id);
     if (pin) {
-      res.json(pin);
+      res.status(200).json(pin);
     } else {
       res.status(404).json({ message: 'Pin not found' });
     }
@@ -60,7 +60,7 @@ router.get('/:id', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
   try {
     const pins = await dbFunctions.getPinsByUserId(req.params.userId);
-    res.json(pins);
+    res.status(200).json(pins);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -71,7 +71,7 @@ router.get('/:id/likes', async (req, res) => {
   try {
     const count = await dbFunctions.getLikesCountForPin(req.params.id);
     console.log(count);
-    res.status(202).json(count);
+    res.status(200).json(count);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -92,7 +92,7 @@ router.get('/:pinId/like/user/:userId', async (req, res) => {
 router.post('/:pinId/like/user/:userId', async (req, res) => {
   try {
     await dbFunctions.addLike(req.params.userId, req.params.pinId);
-    res.status(200).json("like added successfully");
+    res.status(201).json("like added successfully");
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -102,7 +102,7 @@ router.post('/:pinId/like/user/:userId', async (req, res) => {
 router.delete('/:pinId/like/user/:userId', async (req, res) => {
   try {
     await dbFunctions.removeLike(req.params.userId, req.params.pinId);
-    res.status(200).json("like removed successfully");
+    res.status(201).json("like removed successfully");
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -141,7 +141,7 @@ router.put('/:id', async (req, res) => {
   try {
     const { title, description } = req.body;
     await dbFunctions.updatePin(req.params.id, title, description);
-    res.json({ message: 'Pin updated successfully' });
+    res.status(201).json({ message: 'Pin updated successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to update pin', error: error.message });
   }
@@ -161,7 +161,7 @@ router.delete('/:id', async (req, res) => {
       console.error(`error deleting file: ${pin.media_url}:`, fileError);
     }
     await dbFunctions.deletePin(req.params.id);
-    res.json({ message: 'Pin deleted successfully' });
+    res.status(201).json({ message: 'Pin deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete pin', error: error.message });
   }
@@ -171,7 +171,7 @@ router.delete('/:id', async (req, res) => {
 router.get('/:id/comments', async (req, res) => {
   try {
     const comments = await dbFunctions.getCommentsForPin(req.params.id);
-    res.json(comments);
+    res.status(200).json(comments);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -196,7 +196,7 @@ router.get('/search', async (req, res) => {
   try {
     const { query } = req.query;
     const pins = await dbFunctions.searchPins(query);
-    res.json(pins);
+    res.status(200).json(pins);
   } catch (error) {
     res.status(500).json({ message: 'Failed to search pins', error: error.message });
   }
